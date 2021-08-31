@@ -1,0 +1,2 @@
+Copyright (c) Genetec. All rights reserved.
+May be used only in accordance with a valid Source Code License Agreement.

@@ -1,0 +1,25 @@
+# directories
+**/.azure-pipelines/
+**/bin/
+**/obj/
+**/out/
+**/.vs/
+**/.git/
+**/node_modules/
+**/TestResults/
+**/scripts/
+**/buildPipelines/
+**/tests/SystemTests/
+**/manifests/
+
+# files
+**/Dockerfile*
+**/*.trx
+**/*.md
+**/.git*
+**/*build.yml
+**/publishTestResults.yml
+**/.dockerignore
+**/*.ps1
+**/*.env
+**/azurepipelines-coverage.yml

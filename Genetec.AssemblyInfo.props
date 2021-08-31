@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <Authors>Genetec - Video Integrations</Authors>
+    <Company>Genetec Inc.</Company>
+    <Copyright>Copyright © Genetec Inc. $([System.DateTime]::UtcNow.Year)</Copyright>
+    <FileVersion Condition="'$(BUILD_BUILDNUMBER)' != ''">$(BUILD_BUILDNUMBER)</FileVersion>
+    <FileVersion Condition="!$(BUILD_BUILDNUMBER.Contains('.'))">1.0.0</FileVersion>
+    <Version>$(FileVersion)</Version>
+    <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+  </PropertyGroup>
+
+</Project>

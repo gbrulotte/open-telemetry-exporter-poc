@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemDefinitionGroup>
+    <PackageReference>
+      <Publish>true</Publish>
+    </PackageReference>
+    <GlobalPackageReference>
+      <IncludeAssets>all</IncludeAssets>
+    </GlobalPackageReference>
+  </ItemDefinitionGroup>
+
+  <!-- Static analysis -->
+  <ItemGroup>
+    <GlobalPackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[5.0.0]" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="[8.26.0.34506]" />
+    <GlobalPackageReference Include="StyleCop.Analyzers" Version="[1.1.118]" />
+  </ItemGroup>
+
+  <!-- Code -->
+  <ItemGroup>
+    <PackageReference Update="OpenTelemetry" Version="[1.2.0-alpha2]" />
+    <PackageReference Update="OpenTelemetry.Exporter.Console" Version="[1.2.0-alpha2]" />
+    <PackageReference Update="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="[1.2.0-alpha2]" />
+    <PackageReference Update="OpenTelemetry.Exporter.Prometheus" Version="[1.2.0-alpha2]" />
+    <PackageReference Update="OpenTelemetry.Extensions.Hosting" Version="[1.0.0-rc7]" />
+    <PackageReference Update="OpenTelemetry.Instrumentation.AspNetCore" Version="[1.0.0-rc7]" />
+    <PackageReference Update="OpenTelemetry.Instrumentation.Http" Version="[1.0.0-rc7]" />
+    <PackageReference Update="Serilog.AspNetCore" Version="[4.1.0]" />
+    <PackageReference Update="Serilog.Sinks.Async" Version="[1.4.0]" />
+    <PackageReference Update="Serilog.Sinks.Seq" Version="[5.0.1]" />
+    <PackageReference Update="Swashbuckle.AspNetCore" Version="[6.1.5]" />
+  </ItemGroup>
+
+</Project>
