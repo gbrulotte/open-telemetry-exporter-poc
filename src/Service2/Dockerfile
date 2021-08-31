@@ -45,6 +45,13 @@ RUN dotnet publish ".\src\Service2\Service2.csproj" -c release -o ./bin -r linux
 
 # Final stage for runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0.0-preview.7-alpine3.13
+
+RUN apk add libgdiplus --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
+    apk add terminus-font && \
+    apk add --no-cache icu-libs
+# https://www.abhith.net/blog/docker-sql-error-on-aspnet-core-alpine/
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
+
 WORKDIR /app
 COPY --from=publish /app/bin ./
 

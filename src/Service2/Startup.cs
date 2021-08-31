@@ -1,24 +1,19 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 
-namespace Genetec.Enrollment.Management.Api;
+namespace Genetec.Service2;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class Startup
 {
     public static readonly ActivitySource ActivitySource = new("Genetec.Service2", "1.0");
-
-    public static readonly Meter Meter = new("Genetec.Service2", "v1.0");
-#pragma warning disable SA1306 // Field names should begin with lower-case letter
-    //private static readonly MeterProvider? Provider;
-#pragma warning restore SA1306 // Field names should begin with lower-case letter
 
     public Startup(IConfiguration configuration)
     {
@@ -55,6 +50,9 @@ public class Startup
 
         services.AddHealthChecks();
 
+        services.AddDbContext<LocationContext>(options =>
+                options.UseSqlServer(Configuration.GetValue<string>("ConnectionString")));
+
         services.AddOpenTelemetryTracing(builder =>
             builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Service2"))
@@ -68,29 +66,11 @@ public class Startup
                     };
                 })
                 .AddHttpClientInstrumentation()
+                .AddSqlClientInstrumentation()
                 .AddOtlpExporter(otlpOptions =>
                 {
                     otlpOptions.Endpoint = new Uri(Configuration.GetValue<string>("OTEL_EXPORTER_OTLP_ENDPOINT"));
                 }));
-
-        // Adding the OtlpExporter creates a GrpcChannel.
-        // This switch must be set before creating a GrpcChannel/HttpClient when calling an insecure gRPC service.
-        // See: https://docs.microsoft.com/aspnet/core/grpc/troubleshoot#call-insecure-grpc-services-with-net-core-client
-        //        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-        //#pragma warning disable S2696 // Instance members should not write to "static" fields
-        //        Provider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()
-        //#pragma warning restore S2696 // Instance members should not write to "static" fields
-        //            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Genetec.Enrollment.Management.Service"))
-        //            .AddSource("Genetec.Enrollment.Management.Service")
-        //            .AddAspNetCoreInstrumentation()
-        //            .AddHttpClientInstrumentation()
-        //            .AddConsoleExporter()
-        //.AddOtlpExporter(o =>
-        //{
-        //    o.Endpoint = new Uri("http://host.docker.internal:4317");
-        ////})
-        //.Build();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

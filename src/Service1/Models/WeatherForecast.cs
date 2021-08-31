@@ -8,6 +8,11 @@ namespace Genetec.Enrollment.Management.Api.Models;
 public class WeatherForecast
 {
     /// <summary>
+    /// Gets the location.
+    /// </summary>
+    public string? Location { get; init; }
+
+    /// <summary>
     /// Gets the weather forecast date.
     /// </summary>
     public DateTime Date { get; init; }

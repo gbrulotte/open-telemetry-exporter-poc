@@ -1,4 +1,4 @@
-﻿namespace Genetec.Enrollment.Management.Api.Controllers;
+﻿namespace Genetec.Service2.Controllers;
 
 /// <summary>
 /// Controller handling unexpected errors.

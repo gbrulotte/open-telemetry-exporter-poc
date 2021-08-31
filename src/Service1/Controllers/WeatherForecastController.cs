@@ -1,4 +1,6 @@
-﻿namespace Genetec.Enrollment.Management.Api;
+﻿using Genetec.Service1.Models;
+
+namespace Genetec.Enrollment.Management.Api;
 
 /// <summary>
 /// Weather forecast controller.
@@ -34,30 +36,28 @@ public class WeatherForecastController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IEnumerable<WeatherForecast>> GetAsync()
     {
-        IReadOnlyCollection<WeatherForecast>? otherForecasts = null;
-
-        using (var activity = Startup.ActivitySource.StartActivity("Getting weather forecasts"))
-        {
-            using var client = _clientFactory.CreateClient("Service2");
-            otherForecasts = await client.GetFromJsonAsync<IReadOnlyCollection<WeatherForecast>>("/api/WeatherForecast");
-        }
+        using var client = _clientFactory.CreateClient("Service2");
+        var locations = await client.GetFromJsonAsync<IReadOnlyCollection<Location>>("/api/locations");
 
         var counter = Startup.Meter.CreateCounter<int>("Requests");
         counter.Add(1, KeyValuePair.Create<string, object?>("request", "read"));
 
         _logger.LogDebug("Inside weather forecast controller.");
 
-        var rng = new Random();
-        var foreacasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        using (var activity = Startup.ActivitySource.StartActivity("Computting weather forecasts"))
         {
+            // Simulating CPU intensive load.
+            await Task.Delay(200);
+        }
+
+        var rng = new Random();
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Location = locations?.ElementAt(rng.Next(0, locations?.Count ?? 0)).Name,
             Date = DateTime.Now.AddDays(index),
             TemperatureC = rng.Next(-20, 55),
             Summary = Summaries[rng.Next(Summaries.Length)],
         })
         .ToList();
-
-        foreacasts.AddRange(otherForecasts ?? Array.Empty<WeatherForecast>());
-
-        return foreacasts;
     }
 }

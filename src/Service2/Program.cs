@@ -1,8 +1,10 @@
 ﻿using Serilog;
 
-namespace Genetec.Enrollment.Management.Api;
+namespace Genetec.Service2;
 
-internal static class Program
+#pragma warning disable S1118 // Utility classes should not have public constructors
+internal class Program
+#pragma warning restore S1118 // Utility classes should not have public constructors
 {
     public static void Main(string[] args)
     {
@@ -14,7 +16,11 @@ internal static class Program
         {
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromSeconds(2));
 
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            CreateDbIfNotExists(host);
+
+            host.Run();
         }
         catch (Exception ex)
         {
@@ -35,4 +41,22 @@ internal static class Program
             {
                 webBuilder.UseStartup<Startup>();
             });
+
+    private static void CreateDbIfNotExists(IHost host)
+    {
+        using (var scope = host.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<LocationContext>();
+                DbInitializer.Initialize(context);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
+    }
 }

@@ -50,6 +50,7 @@ services:
       context: .
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - ConnectionString=Server=db;Database=master;User=sa;Password=!Password1;
     ports:
       - "8081:8080"
     depends_on:
@@ -70,3 +71,9 @@ services:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     ports:
       - 3000:3000
+
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+        SA_PASSWORD: "!Password1"
+        ACCEPT_EULA: "Y"
